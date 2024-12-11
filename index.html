@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            background-color: #eaf4e3;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            display: none;
+            border-radius: 5px;
+        }
+
+        .result p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            border-radius: 5px;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Form</h1>
+        <form id="registrationForm" method="POST" action="">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="country">Country:</label>
+            <select id="country" name="country" required>
+                <option value="">Select your country</option>
+                <option value="USA">USA</option>
+                <option value="Canada">Canada</option>
+                <option value="UK">UK</option>
+                <option value="India">India</option>
+                <option value="Australia">Australia</option>
+            </select>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="result" id="result">
+            <h3>Submitted Information:</h3>
+            <p id="resultName"></p>
+            <p id="resultEmail"></p>
+            <p id="resultPhone"></p>
+            <p id="resultCountry"></p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            Your information has been submitted successfully!
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#registrationForm").on("submit", function(event) {
+                event.preventDefault();
+
+                // Collect form data
+                const name = $("#name").val();
+                const email = $("#email").val();
+                const phone = $("#phone").val();
+                const country = $("#country").val();
+
+                // Send data to PHP script via AJAX
+                $.ajax({
+                    url: "", // Form is processed inline
+                    type: "POST",
+                    data: { name, email, phone, country },
+                    success: function(response) {
+                        const result = JSON.parse(response);
+
+                        if (result.success) {
+                            $("#resultName").text(`Name: ${result.data.name}`);
+                            $("#resultEmail").text(`Email: ${result.data.email}`);
+                            $("#resultPhone").text(`Phone: ${result.data.phone}`);
+                            $("#resultCountry").text(`Country: ${result.data.country}`);
+
+                            // Show the result and success message
+                            $("#result").show();
+                            $("#successMessage").show();
+
+                            // Reset the form fields
+                            $("#registrationForm")[0].reset();
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+
+    <!-- <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = htmlspecialchars($_POST['name']);
+        $email = htmlspecialchars($_POST['email']);
+        $phone = htmlspecialchars($_POST['phone']);
+        $country = htmlspecialchars($_POST['country']);
+
+        $response = [
+            'success' => true,
+            'data' => [
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'country' => $country
+            ]
+        ];
+
+        echo json_encode($response);
+        exit;
+    }
+    ?> -->
+</body>
+</html>
